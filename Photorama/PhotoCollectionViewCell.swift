@@ -9,6 +9,9 @@
 import UIKit
 
 
+// This is our custom Cell
+
+
 class PhotoCollectionViewCell: UICollectionViewCell {
     
     
@@ -16,6 +19,7 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     @IBOutlet var spinner: UIActivityIndicatorView!
     
 
+    
     func updateWithImage(_ image: UIImage?) {
         if let imageToDisplay = image {
             spinner .stopAnimating()
@@ -28,11 +32,16 @@ class PhotoCollectionViewCell: UICollectionViewCell {
     }  //end method
     
     
+    
+    // called when cell is first created
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         updateWithImage(nil )
     }
     
+    
+    // called when cell is being reused
     override func prepareForReuse() {
         super.prepareForReuse()
         updateWithImage(nil )
