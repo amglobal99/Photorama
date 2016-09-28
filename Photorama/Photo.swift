@@ -1,6 +1,5 @@
 //
 
-
 import Foundation
 import UIKit
 
@@ -28,6 +27,6 @@ class Photo {
 extension Photo: Equatable {}
 
 
-func == (lhs:Photo, rhs: Photo) -> Bool  {
-    return lhs.photoID == rhs.photoID
-}
+        func == (lhs:Photo, rhs: Photo) -> Bool  {
+            return lhs.photoID == rhs.photoID
+        }

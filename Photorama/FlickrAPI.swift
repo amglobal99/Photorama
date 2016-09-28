@@ -64,7 +64,7 @@ struct FlickrAPI {
     
     
     static func recentPhotosURL() -> URL {
-        return flickrURL(method: .RecentPhotos, parameters: ["extras":"url_h,date_taken"])
+        return flickrURL(method: Method.RecentPhotos, parameters: ["extras":"url_h,date_taken"])
     }
     
     
@@ -82,7 +82,7 @@ struct FlickrAPI {
                 else {
                     print("json does not match")
                 //json does not match
-                return .failure( FlickrError.invalidJSONData )
+                return PhotosResult.failure( FlickrError.invalidJSONData )
             }
             
             print ("         FlickrAPI.swift: photosFromJSONData: photo Array count is \(photosArray.count) " )
@@ -90,8 +90,9 @@ struct FlickrAPI {
 
             var finalPhotos = [Photo]()
             
+            // get Individual photos
             for photoJSON in photosArray {
-                if let photo  = photoFromJSONObject(photoJSON) {
+                if let photo: Photo  = photoFromJSONObject(photoJSON) {
                     finalPhotos.append(photo)
                 }
             }
@@ -103,15 +104,15 @@ struct FlickrAPI {
             if finalPhotos.count == 0 && photosArray.count > 0 {
                 print("Sorry buddy...went wrong")
                 //we werent able to parse any of the photos
-                return .failure(FlickrError.invalidJSONData)
+                return PhotosResult.failure(FlickrError.invalidJSONData)
             }
             
             
-            return .success(finalPhotos)
+            return PhotosResult.success(finalPhotos)
         }
         catch let error {
             print("stumbled into ctach block" )
-            return .failure(error)
+            return PhotosResult.failure(error)
             
         }
         

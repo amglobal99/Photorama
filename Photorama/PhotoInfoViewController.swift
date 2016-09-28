@@ -6,7 +6,6 @@ import UIKit
 
 class PhotoInfoViewController: UIViewController {
     
-    
     @IBOutlet var imageView: UIImageView!
     
     // when photo loads show a title
@@ -16,7 +15,6 @@ class PhotoInfoViewController: UIViewController {
         }
     }
     
-    
     var store: PhotoStore!
     
     
@@ -24,10 +22,9 @@ class PhotoInfoViewController: UIViewController {
     override func viewDidLoad()  {
         
         super.viewDidLoad()
-        
         print("PhotoInfoViewControler.swift: Calling fetchImageForPhoto (PhotoStore.swift) ") 
         
-        store.fetchImageForPhoto(photo) {
+        store.fetchImageForPhoto(photo) {  // begin closure
             (result) -> Void in
             switch result {
             case let .success(image):

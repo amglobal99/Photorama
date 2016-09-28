@@ -6,10 +6,7 @@ import UIKit
 
 class PhotosViewController: UIViewController, UICollectionViewDelegate {
     
-    
-   // @IBOutlet var imageView: UIImageView!
     @IBOutlet var collectionView: UICollectionView!
-    
     var store: PhotoStore!
     let photoDataSource = PhotoDataSource()
     
@@ -18,68 +15,32 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate {
     override func viewDidLoad()  {
     
         super.viewDidLoad()
-        
         collectionView.dataSource = photoDataSource
         collectionView.delegate = self
 
-    
         print("PhotosViewController.swift : Calling fetchRecentPhotos method (PhotoStore.swift)")
         print("***** NOTE: This request is working on  abackground thread ******")
         
         
-        store.fetchRecentPhotos()    { //begin closure
-            
+        store.fetchRecentPhotos()   { //begin closure
+        
+            // NOTE: the fetchRecentPhotos has populated closure variabe with PhotosResult
+            //       That result will then be used in this following code
             
                     (photosResult)-> Void in
-                
-                
-                        /*
-                
-                            switch photosResult {
-                            case let .Success(photos):
-                                print("      fetchRecentPhotos Handler: Successfully found \(photos.count) recent photos")
-                                if let firstPhoto = photos.first {
-                                    print("      fetchRecentPhotos Handler: calling fetchImageForPhoto method" )
-                                    self.store.fetchImageForPhoto(firstPhoto)
-                                        {  // starting handler
-                                                (imageResult) -> Void in
-                                            
-                                                switch imageResult {
-                                                        case let .Success(image):
-                                                            NSOperationQueue.mainQueue().addOperationWithBlock {
-                                                                
-                                                                self.imageView.image = image
-                                            }
-                                            
-                                                        case let .Failure(error) :
-                                                            print("               fetchImageForPhoto Handler: Error downloading image \(error)" )
-                                                }  //end switch
-                                    }  ///end handler
-                                    
-                                }  //end if
-                            
-                            case let .Failure(error) :
-                                print("      fetchRecentPhotos Handler: Error fetching recent photos \(error)"  )
-                        } //end switch PhotosResul
-                    
-        
-                        */
-                
                 
                         // ****** IMPORTTANT *************
                         //  See how Opeartion is used
             
-                    print("PhotosViewController.swift : Background operation completed. Now add results to store on Main thread" )
-            
-            
+                        print("PhotosViewController.swift : Background operation completed. Now add results to store on Main thread" )
             
                         OperationQueue.main.addOperation() {
                             
                             switch photosResult {
-                            case let .success(photos):
+                            case let PhotosResult.success(photos):
                                 print("    PhotosViewController.swift : Successfully found \(photos.count) recent photos" )
                                 self.photoDataSource.photos = photos
-                            case let .failure(error ) :
+                            case let PhotosResult.failure(error ) :
                                 self.photoDataSource.photos.removeAll()
                                 print("    PhotosViewController.swift : Error fetching recent photos \(error)")
                             }
@@ -87,19 +48,15 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate {
                             self.collectionView.reloadSections(IndexSet(integer: 0) )
                         
                         } //end operation block handler
-                        
-                            
             
             } // end closure for fetchRecentPhotos
-    
-    
     
     }  //end method
     
     
-    func collectionView (_ collectionView: UICollectionView,
-        willDisplay cell: UICollectionViewCell,
-        forItemAt indexPath: IndexPath )  {
+
+    
+    func collectionView (_ collectionView: UICollectionView,  willDisplay cell: UICollectionViewCell,  forItemAt indexPath: IndexPath )  {
             
                 let photo = photoDataSource.photos[(indexPath as NSIndexPath).row]
                 store.fetchImageForPhoto(photo) {  //begin closure
@@ -115,7 +72,6 @@ class PhotosViewController: UIViewController, UICollectionViewDelegate {
             } // end closure
             
     } //end method
-    
     
     
     

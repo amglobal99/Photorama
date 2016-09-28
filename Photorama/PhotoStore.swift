@@ -26,8 +26,12 @@ class PhotoStore {
     
     
     
-    
     func fetchRecentPhotos( completion: @escaping (PhotosResult) -> Void )    {
+        
+        // NOTE: I wondered how we were referencing PhotosResult here
+        //     because it is declared in FlickrAPI.swift
+        // I guess since Closures capture context, it has access to that var ???
+        
         
         let url = FlickrAPI.recentPhotosURL()
         let request = URLRequest(url: url as URL)
@@ -36,7 +40,7 @@ class PhotoStore {
         // what folows is an instance of NSURLSessionTask ... it has  a closure
         let task = session.dataTask(with: request, completionHandler: {  (data, response, error) -> Void in    // this is a closure
                 print("  PhotoStore.swift:fetchRecentPhotos: calling processRecentPhotoRequests method (in same file)")
-                let result = self.processRecentPhotoRequests(data: data, error: error as NSError?)
+            let result: PhotosResult = self.processRecentPhotoRequests(data: data, error: error as NSError?)
                 print("  PhotoStore.swift: fetchRecentPhotos: completed processRecentPhotoRequests. Now running handler")
                 completion(result)
                 print("  PhotoStore.swift: fetchRecentPhotos: completed executon of handler")
@@ -49,10 +53,7 @@ class PhotoStore {
     } //end method
     
     
-    
-    
-    
-    
+
     
     func processRecentPhotoRequests(data: Data?, error: NSError? ) -> PhotosResult {
         
@@ -83,10 +84,10 @@ class PhotoStore {
             {
                     (data, response, error ) -> Void in
                     //print("          PhotoStore.swift: fetchImageForPhoto: calling processImageRequest")
-                    let result = self.processImageRequest(data: data, error: error as NSError?)
+                let result: ImageResult = self.processImageRequest(data: data, error: error as NSError?)
                     //print("          PhotoStore.swift: fetchImageForPhoto: Finished execution of processImageRequest")
                 
-                    if case let .success(image) = result {
+                    if case let ImageResult.success(image) = result {
                         photo.image = image
                         print("          PhotoStore.swift: fetchImageForPhoto: image obtained successfully" )
                     }
@@ -110,9 +111,9 @@ class PhotoStore {
                 
                 //could not get image
                 if data == nil {
-                    return .failure(error!)
+                    return ImageResult.failure(error!)
                 } else {
-                    return .failure(PhotoError.imageCreationError)
+                    return ImageResult.failure(PhotoError.imageCreationError)
                 }
         }
         
