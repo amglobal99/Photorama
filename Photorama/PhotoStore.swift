@@ -25,11 +25,12 @@ class PhotoStore {
     
     
     
+    
+    
     func fetchRecentPhotos( completion: @escaping (PhotosResult) -> Void )    {
         
         let url = FlickrAPI.recentPhotosURL()
         let request = URLRequest(url: url as URL)
-        
         print("  PhotoStore.swift: fetchRecentPhotos: sending request for JSON data")
         
         // what folows is an instance of NSURLSessionTask ... it has  a closure
@@ -41,35 +42,35 @@ class PhotoStore {
                 print("  PhotoStore.swift: fetchRecentPhotos: completed executon of handler")
             })                        
 
- //end closure
+        //end closure
     
-        
         task.resume()
     
     } //end method
     
     
+    
+    
+    
+    
+    
     func processRecentPhotoRequests(data: Data?, error: NSError? ) -> PhotosResult {
         
         print("      PhotoStore.swift: processRecentPhotoRequests:  Started")
-        
         guard let jsonData = data else {
             print("      PhotoStore.swift: processRecebtPhotoRequests: returning failuer")
             return .failure(error!)
         }
-        
         print ("      PhotoStore.swift:processRecentPhotoRequests : calling flickrapi.photosFromJSONData (FlickrAPI.swift)")
-    
         return FlickrAPI.photosFromJSONData(jsonData)
-        
     } //end method
+    
+    
     
     
     func fetchImageForPhoto(_ photo: Photo, completion: @escaping (ImageResult) -> Void ) {
         
         //print("          PhotoStore.swift: fetchImageForPhoto: Started execution of method")
-        
-        
         if let image = photo.image {
             completion(.success(image) )
             return
@@ -81,37 +82,31 @@ class PhotoStore {
         let task = session.dataTask(with: request, completionHandler:
             {
                     (data, response, error ) -> Void in
-                    
                     //print("          PhotoStore.swift: fetchImageForPhoto: calling processImageRequest")
                     let result = self.processImageRequest(data: data, error: error as NSError?)
                     //print("          PhotoStore.swift: fetchImageForPhoto: Finished execution of processImageRequest")
-                    
-                    
+                
                     if case let .success(image) = result {
                         photo.image = image
-                        
                         print("          PhotoStore.swift: fetchImageForPhoto: image obtained successfully" )
                     }
                     
                     //print("              PhotoStore.swift: fetchImageForPhoto: executing handler" )
                     completion(result)
                     //print("              PhotoStore.swift: fetchImageForPhoto: completed handler")
-        }
-            
-        )
+            } )
         
         task.resume()
         
     } //end method
     
     
+    
+    
     func processImageRequest(data: Data?, error: NSError?) -> ImageResult {
-        
+
         //print("              PhotoStore.swift: processImageRequest: Starting method" )
-        
-        guard let
-            imageData = data,
-            let image = UIImage(data: imageData) else {
+        guard let  imageData = data,  let image = UIImage(data: imageData) else {
                 
                 //could not get image
                 if data == nil {
@@ -123,8 +118,6 @@ class PhotoStore {
         
         //print("              PhotoStore.swift: processImageRequest: returning sucess" )
         return .success(image )
-    
-        
     } //end method
     
     
