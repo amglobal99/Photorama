@@ -2,9 +2,7 @@
 //  PhotoCollectionViewCell.swift
 //  Photorama
 //
-//  Created by Dad on 4/25/16.
-//  Copyright © 2016 Dad. All rights reserved.
-//
+
 
 import UIKit
 

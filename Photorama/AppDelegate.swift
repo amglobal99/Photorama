@@ -2,9 +2,6 @@
 //  AppDelegate.swift
 //  Photorama
 //
-//  Created by Dad on 4/13/16.
-//  Copyright © 2016 Dad. All rights reserved.
-//
 
 import UIKit
 import CoreData
